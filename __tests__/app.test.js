@@ -14,7 +14,7 @@ afterAll(() => {
 
 describe('app', () => {
   describe('GET /api/categories', () => {
-    test('200: should return an array of categories objects', () => {
+    test('200: GET should return an array of categories objects', () => {
       return request(app)
         .get(`/api/categories`)
         .expect(200)
