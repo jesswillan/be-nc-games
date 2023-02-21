@@ -1,4 +1,4 @@
-const db = require('../db/connection');
+const db = require('../connection');
 
 exports.fetchReviews = () => {
   return db
@@ -14,3 +14,12 @@ exports.fetchReviews = () => {
       return res.rows;
     });
 };
+
+// exports.fetchReviewById = (review_id) => {
+//   return db
+//     .query(`SELECT * FROM reviews WHERE review.review_id = $1`, [review_id])
+//     .then((res) => {
+//       // console.log(res)
+//       return res.rows;
+//     });
+// };

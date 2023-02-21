@@ -58,7 +58,7 @@ describe('app', () => {
     });
   });
   // describe('GET /api/reviews/:review_id', () => {
-  //   test('200: GET should return an array of reviews objects when passed review_id', () => {
+  //   test('200: GET should return a review object when passed a review_id', () => {
   //     return request(app)
   //       .get(`/api/reviews?review_id=2`)
   //       .expect(200)
