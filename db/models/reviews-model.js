@@ -15,11 +15,11 @@ exports.fetchReviews = () => {
     });
 };
 
-// exports.fetchReviewById = (review_id) => {
-//   return db
-//     .query(`SELECT * FROM reviews WHERE review.review_id = $1`, [review_id])
-//     .then((res) => {
-//       // console.log(res)
-//       return res.rows;
-//     });
-// };
+exports.fetchReviewById = (review_id) => {
+  return db
+    .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
+    .then((res) => {
+      console.log(res.rows[0])
+      return res.rows[0];
+    });
+};

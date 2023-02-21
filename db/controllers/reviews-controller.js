@@ -12,7 +12,7 @@ exports.getReviews = (req, res, next) => {
 };
 
 exports.getReviewById = (req, res, next) => {
-  console.log(req, '<<<<req');
+// console.log(req.params, 'req')
   const {review_id} = req.params;
 
   fetchReviewById(review_id)
