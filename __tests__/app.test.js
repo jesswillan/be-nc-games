@@ -42,6 +42,7 @@ describe('app', () => {
         .expect(200)
         .then(({body}) => {
           expect(body.reviews).toHaveLength(13);
+          expect(Array.isArray(body.reviews)).toBe(true)
           body.reviews.forEach((review) => {
             expect(review).toHaveProperty('owner', expect.any(String));
             expect(review).toHaveProperty('title', expect.any(String));
