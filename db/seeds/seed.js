@@ -59,9 +59,10 @@ const seed = ({ categoryData, commentData, reviewData, userData }) => {
 			);`);
     })
     .then(() => {
+      // console.log(categoryData)
       const insertCategoriesQueryStr = format(
         'INSERT INTO categories (slug, description) VALUES %L;',
-        categoryData.map(({ slug, description }) => [slug, description])
+        categoryData.map(({ slug, description }) => {return [slug, description]})
       );
       const categoriesPromise = db.query(insertCategoriesQueryStr);
 
