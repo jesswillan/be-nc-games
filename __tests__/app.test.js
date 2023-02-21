@@ -26,14 +26,14 @@ describe('app', () => {
           });
         });
     });
-    // test('404: GET should return not found when given route that does not exist', () => {
-    //   return request(app)
-    //     .get(`/api/notARoute`)
-    //     .expect(404)
-    //     .then(({body}) => {
-    //       expect(body.msg).toBe('404: Not Found');
-    //     });
-    // });
+    test('404: GET should return error message when given route that does not exist', () => {
+      return request(app)
+        .get(`/api/notARoute`)
+        .expect(404)
+        .then(({body}) => {
+          expect(body.msg).toBe('Path Not Found');
+        });
+    });
   });
   describe('GET /api/reviews', () => {
     test('200: GET should return an array of review objects', () => {
@@ -51,7 +51,7 @@ describe('app', () => {
             expect(review).toHaveProperty('created_at', expect.any(String));
             expect(review).toHaveProperty('votes', expect.any(Number));
             expect(review).toHaveProperty('designer', expect.any(String));
-            // expect(review).toHaveProperty('comment_count', expect.any(Number));
+            expect(review).toHaveProperty('comment_count', expect.any(Number));
           });
         });
     });
