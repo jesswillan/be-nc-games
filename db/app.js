@@ -5,7 +5,7 @@ const {getReviews, getReviewById} = require('./controllers/reviews-controller');
 const {
   handle500Statuses,
   handle404NonExistentPaths,
-} = require('./models/error-handling-controller');
+} = require('./controllers/error-handling-controller');
 
 app.get(`/api/categories`, getCategories);
 

@@ -74,14 +74,14 @@ describe('app', () => {
           expect(body.review).toHaveProperty('created_at', expect.any(String));
         });
     });
-    // test('404: GET should return an error message when queried with a valid but non existent review_id ', () => {
-    //   return request(app)
-    //     .get('/api/reviews?review_id=50')
-    //     .expect(404)
-    //     .then(({body}) => {
-    //       expect(body.msg).toBe('review_id not found');
-    //     });
-    // });
+    test('404: GET should return an error message when queried with a valid but non existent review_id ', () => {
+      return request(app)
+        .get('/api/reviews/50')
+        .expect(404)
+        .then(({body}) => {
+          expect(body.msg).toBe('review_id not found');
+        });
+    });
     // test('400: GET should return an error message when queried with an invalid review_id', () => {
     //   return request(app)
     //   .get('api/reviews?review_id=kittens')

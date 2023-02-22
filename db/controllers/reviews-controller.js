@@ -12,7 +12,6 @@ exports.getReviews = (req, res, next) => {
 };
 
 exports.getReviewById = (req, res, next) => {
-// console.log(req.params, 'req')
   const {review_id} = req.params;
 
   fetchReviewById(review_id)
@@ -20,6 +19,9 @@ exports.getReviewById = (req, res, next) => {
       res.status(200).send({review});
     })
     .catch((err) => {
+      if (err.status === 404) {
+        res.status(404).send({msg: err.msg})
+      } else
       next(err);
     });
 };
