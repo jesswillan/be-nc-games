@@ -3,10 +3,10 @@ const app = express();
 const {getCategories} = require('./controllers/categories-controller');
 const {getReviews, getReviewById} = require('./controllers/reviews-controller');
 const {
-  handle500Statuses,
   handleInvalidPath,
-  handleCustomErrors,
   handlePSQLErrors,
+  handleCustomErrors,
+  handle500Statuses,
 } = require('./controllers/error-handling-controller');
 
 app.get(`/api/categories`, getCategories);
