@@ -16,12 +16,6 @@ exports.fetchReviews = () => {
 };
 
 exports.fetchReviewById = (review_id) => {
-  if (!Number.isInteger(+review_id)) {
-    return Promise.reject({
-      status: 400,
-      msg: 'Bad Request',
-    });
-  }
   return db
     .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
     .then((res) => {

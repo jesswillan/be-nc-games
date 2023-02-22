@@ -6,6 +6,7 @@ const {
   handle500Statuses,
   handleInvalidPath,
   handleCustomErrors,
+  handlePSQLErrors,
 } = require('./controllers/error-handling-controller');
 
 app.get(`/api/categories`, getCategories);
@@ -15,6 +16,8 @@ app.get(`/api/reviews`, getReviews);
 app.get(`/api/reviews/:review_id`, getReviewById);
 
 app.all('*', handleInvalidPath);
+
+app.use(handlePSQLErrors);
 
 app.use(handleCustomErrors);
 
