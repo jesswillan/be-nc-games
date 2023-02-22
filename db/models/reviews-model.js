@@ -1,4 +1,4 @@
-const db = require('../db/connection');
+const db = require('../connection');
 
 exports.fetchReviews = () => {
   return db
@@ -12,5 +12,22 @@ exports.fetchReviews = () => {
     )
     .then((res) => {
       return res.rows;
+    });
+};
+
+exports.fetchReviewById = (review_id) => {
+  return db
+    .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
+    .then((res) => {
+      if (res.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: 'Not Found',
+        });
+      }
+      return res.rows[0];
+    })
+    .catch((err) => {
+      return Promise.reject(err);
     });
 };
