@@ -13,6 +13,16 @@ afterAll(() => {
 });
 
 describe('app', () => {
+  describe('404 Errors', () => {
+    test('404: GET should return error message when given route that does not exist', () => {
+      return request(app)
+        .get(`/api/notAPath`)
+        .expect(404)
+        .then(({body}) => {
+          expect(body.msg).toBe('Not Found');
+        });
+    });
+  });
   describe('GET /api/categories', () => {
     test('200: GET should return an array of categories objects', () => {
       return request(app)
@@ -24,14 +34,6 @@ describe('app', () => {
             expect(category).toHaveProperty('slug', expect.any(String));
             expect(category).toHaveProperty('description', expect.any(String));
           });
-        });
-    });
-    test('404: GET should return error message when given route that does not exist', () => {
-      return request(app)
-        .get(`/api/notARoute`)
-        .expect(404)
-        .then(({body}) => {
-          expect(body.msg).toBe('Path Not Found');
         });
     });
   });
@@ -67,11 +69,22 @@ describe('app', () => {
           expect(body.review).toHaveProperty('title', expect.any(String));
           expect(body.review).toHaveProperty('review_body', expect.any(String));
           expect(body.review).toHaveProperty('designer', expect.any(String));
-          expect(body.review).toHaveProperty('review_img_url', expect.any(String));
+          expect(body.review).toHaveProperty(
+            'review_img_url',
+            expect.any(String)
+          );
           expect(body.review).toHaveProperty('votes', expect.any(Number));
           expect(body.review).toHaveProperty('category', expect.any(String));
           expect(body.review).toHaveProperty('owner', expect.any(String));
           expect(body.review).toHaveProperty('created_at', expect.any(String));
+        });
+    });
+    test('400: GET should return an error message when queried with an invalid review_id ', () => {
+      return request(app)
+        .get('/api/reviews/notanid')
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
         });
     });
     test('404: GET should return an error message when queried with a valid but non existent review_id ', () => {
@@ -79,16 +92,8 @@ describe('app', () => {
         .get('/api/reviews/50')
         .expect(404)
         .then(({body}) => {
-          expect(body.msg).toBe('review_id not found');
+          expect(body.msg).toBe('Not Found');
         });
     });
-    // test('400: GET should return an error message when queried with an invalid review_id', () => {
-    //   return request(app)
-    //   .get('api/reviews?review_id=kittens')
-    //   .expect(400)
-    //   .then(({body}) => {
-    //     expect(body.msg).toBe('Bad Request')
-    //   });
-    // });
   });
 });
