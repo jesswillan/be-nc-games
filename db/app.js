@@ -2,13 +2,15 @@ const express = require('express');
 const app = express();
 const {getCategories} = require('./controllers/categories-controller');
 const {getReviews, getReviewById} = require('./controllers/reviews-controller');
-const {getCommentsByReviewId} = require('./controllers/comments-controller');
+const {getCommentsByReviewId, postComment} = require('./controllers/comments-controller');
 const {
   handleInvalidPath,
   handlePSQLErrors,
   handleCustomErrors,
   handle500Statuses,
 } = require('./controllers/error-handling-controller');
+
+app.use(express.json())
 
 app.get(`/api/categories`, getCategories);
 
@@ -17,6 +19,8 @@ app.get(`/api/reviews`, getReviews);
 app.get(`/api/reviews/:review_id`, getReviewById);
 
 app.get(`/api/reviews/:review_id/comments`, getCommentsByReviewId);
+
+app.post(`/api/reviews/:review_id/comments`, postComment)
 
 app.all('*', handleInvalidPath);
 
