@@ -96,7 +96,7 @@ describe('app', () => {
         });
     });
   });
-  describe('GET /api/reviews/:review_id/comments', () => {
+  describe.only('GET /api/reviews/:review_id/comments', () => {
     test('200: GET should return an array of comment objects when passed a valid review_id', () => {
       return request(app)
         .get(`/api/reviews/2/comments`)
@@ -105,29 +105,29 @@ describe('app', () => {
           expect(Array.isArray(body.comments)).toBe(true);
           body.comments.forEach((comment) => {
             expect(comment).toHaveProperty('comment_id', expect.any(Number));
-            expect(comment).toHaveProperty('votes', expect.any(String));
+            expect(comment).toHaveProperty('votes', expect.any(Number));
             expect(comment).toHaveProperty('created_at', expect.any(String));
             expect(comment).toHaveProperty('author', expect.any(String));
             expect(comment).toHaveProperty('body', expect.any(String));
             expect(comment).toHaveProperty('review_id', expect.any(Number));
-          })
+          });
         });
     });
-    // test('400: GET should return an error message when queried with an invalid review_id ', () => {
-    //   return request(app)
-    //     .get('/api/reviews/notanid')
-    //     .expect(400)
-    //     .then(({body}) => {
-    //       expect(body.msg).toBe('Bad Request');
-    //     });
-    // });
-    // test('404: GET should return an error message when queried with a valid but non existent review_id ', () => {
-    //   return request(app)
-    //     .get('/api/reviews/50')
-    //     .expect(404)
-    //     .then(({body}) => {
-    //       expect(body.msg).toBe('Not Found');
-    //     });
-    // });
+    test('400: GET should return an error message when queried with an invalid review_id', () => {
+      return request(app)
+        .get('/api/reviews/notanid/comments')
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
+        });
+    });
+    test('404: GET should return an error message when queried with a valid but non existent review_id', () => {
+      return request(app)
+        .get('/api/reviews/50/comments')
+        .expect(404)
+        .then(({body}) => {
+          expect(body.msg).toBe('Not Found');
+        });
+    });
   });
 });
