@@ -25,4 +25,5 @@ exports.insertComment = (username, body, review_id) => {
     console.log(res.rows[0], '<<res.rows')
     return res.rows[0];
   })
+ 
 };

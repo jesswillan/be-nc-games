@@ -141,7 +141,7 @@ describe('app', () => {
         });
     });
   });
-  describe.only('POST /api/reviews/:review_id/comments', () => {
+  describe('POST /api/reviews/:review_id/comments', () => {
     test('201: should return the posted comment', () => {
       const requestBody = {
         username: 'philippaclaire9',
@@ -166,12 +166,41 @@ describe('app', () => {
         body: 'Bad game',
       };
       return request(app)
-      .post('/api/reviews/10/comments')
+        .post('/api/reviews/10/comments')
+        .send(requestBody)
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
+        });
+    });
+    test('400: POST should return an error message when passed an invalid review_id', () => {
+      return request(app)
+        .get('/api/reviews/notanid/comments')
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
+        });
+    });
+    test('400: POST should return an error message when passed a non-existent username', () => {
+      const requestBody = {
+        username: 'tom',
+        body: 'Bad game',
+      };
+      return request(app)
+      .post('/api/reviews/6/comments')
       .send(requestBody)
       .expect(400)
       .then(({body}) => {
-        expect(body.msg).toBe('Bad Request')
-      })
+        expect(body.msg).toBe('Bad Request');
+      });
+    });
+    test('404: POST should return an error message when passed a valid but non existent review_id', () => {
+      return request(app)
+        .get('/api/reviews/50/comments')
+        .expect(404)
+        .then(({body}) => {
+          expect(body.msg).toBe('Not Found');
+        });
     });
   });
 });

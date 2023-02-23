@@ -2,7 +2,6 @@ const {fetchCommentsByReviewId, insertComment} = require('../models/comments-mod
 const {fetchReviewById} = require('../models/reviews-model');
 
 exports.getCommentsByReviewId = (req, res, next) => {
-  console.log(req.params, 'req getcom')
   const {review_id} = req.params;
   const promises = [
     fetchCommentsByReviewId(review_id),
@@ -19,8 +18,6 @@ exports.getCommentsByReviewId = (req, res, next) => {
 };
 
 exports.postComment = (req, res, next) => {
-  console.log(req.body, '<<<reqbody')
-  console.log(req.params, 'reqparams')
   const {username, body} = req.body;
   const {review_id} = req.params;
   insertComment(username, body, review_id)
