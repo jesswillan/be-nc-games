@@ -103,7 +103,7 @@ describe('app', () => {
         .expect(200)
         .then(({body}) => {
           expect(Array.isArray(body.comments)).toBe(true);
-          expect(body.comments).toHaveLength(3)
+          expect(body.comments).toHaveLength(3);
           body.comments.forEach((comment) => {
             expect(comment).toHaveProperty('comment_id', expect.any(Number));
             expect(comment).toHaveProperty('votes', expect.any(Number));
@@ -116,13 +116,13 @@ describe('app', () => {
     });
     test('200: GET should return an empty comments array when passed a valid review_id that has no comments', () => {
       return request(app)
-      .get('/api/reviews/5/comments')
-      .expect(200)
-      .then(({body}) => {
-        expect(Array.isArray(body.comments)).toBe(true);
-        expect(body.comments).toHaveLength(0)
-      })
-    })
+        .get('/api/reviews/5/comments')
+        .expect(200)
+        .then(({body}) => {
+          expect(Array.isArray(body.comments)).toBe(true);
+          expect(body.comments).toHaveLength(0);
+        });
+    });
 
     test('400: GET should return an error message when queried with an invalid review_id', () => {
       return request(app)
@@ -139,6 +139,39 @@ describe('app', () => {
         .then(({body}) => {
           expect(body.msg).toBe('Not Found');
         });
+    });
+  });
+  describe.only('POST /api/reviews/:review_id/comments', () => {
+    test('201: should return the posted comment', () => {
+      const requestBody = {
+        username: 'philippaclaire9',
+        body: 'Bad game',
+      };
+      return request(app)
+        .post('/api/reviews/5/comments')
+        .send(requestBody)
+        .expect(201)
+        .then(({body}) => {
+          expect(body.comment.author).toBe('philippaclaire9');
+          expect(body.comment.body).toBe('Bad game');
+          expect(body.comment.review_id).toBe(5);
+          expect(body.comment).toHaveProperty('comment_id', expect.any(Number));
+          expect(body.comment).toHaveProperty('votes', expect.any(Number));
+          expect(body.comment).toHaveProperty('created_at', expect.any(String));
+        });
+    });
+    test('400: should return an error when field is missing an entry', () => {
+      const requestBody = {
+        username: '',
+        body: 'Bad game',
+      };
+      return request(app)
+      .post('/api/reviews/10/comments')
+      .send(requestBody)
+      .expect(400)
+      .then(({body}) => {
+        expect(body.msg).toBe('Bad Request')
+      })
     });
   });
 });
