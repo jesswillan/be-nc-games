@@ -12,7 +12,9 @@ exports.handlePSQLErrors = (err, req, res, next) => {
   if (err.code === '23503') {
     res.status(400).send({msg: 'Bad Request'});
   }
-  next(err);
+  if (err.code === '23502') {
+    res.status(400).send({msg: 'Bad Request'})
+  } next(err);
 };
 
 exports.handleCustomErrors = (err, req, res, next) => {

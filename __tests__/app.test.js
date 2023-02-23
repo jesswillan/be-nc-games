@@ -162,7 +162,6 @@ describe('app', () => {
     });
     test('400: should return an error when field is missing an entry', () => {
       const requestBody = {
-        username: '',
         body: 'Bad game',
       };
       return request(app)
