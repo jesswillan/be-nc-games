@@ -1,6 +1,6 @@
 const request = require('supertest');
 const seed = require('../db/seeds/seed');
-const app = require('../db/app');
+const app = require('../app');
 const connection = require('../db/connection');
 const data = require('../db/data/test-data/index');
 
@@ -142,7 +142,7 @@ describe('app', () => {
     });
   });
   describe('POST /api/reviews/:review_id/comments', () => {
-    test('201: should return the posted comment', () => {
+    test('201: should return the posted comment when given a review_id and request body', () => {
       const requestBody = {
         username: 'philippaclaire9',
         body: 'Bad game',
@@ -174,7 +174,7 @@ describe('app', () => {
     });
     test('400: POST should return an error message when passed an invalid review_id', () => {
       return request(app)
-        .get('/api/reviews/notanid/comments')
+        .post('/api/reviews/notanid/comments')
         .expect(400)
         .then(({body}) => {
           expect(body.msg).toBe('Bad Request');
@@ -186,16 +186,112 @@ describe('app', () => {
         body: 'Bad game',
       };
       return request(app)
-      .post('/api/reviews/6/comments')
-      .send(requestBody)
-      .expect(400)
-      .then(({body}) => {
-        expect(body.msg).toBe('Bad Request');
-      });
+        .post('/api/reviews/6/comments')
+        .send(requestBody)
+        .expect(404)
+        .then(({body}) => {
+          expect(body.msg).toBe('Not Found');
+        });
     });
     test('404: POST should return an error message when passed a valid but non existent review_id', () => {
+      const requestBody = {
+        username: 'tom',
+        body: 'Bad game',
+      };
       return request(app)
-        .get('/api/reviews/50/comments')
+        .post('/api/reviews/50/comments')
+        .send(requestBody)
+        .expect(404)
+        .then(({body}) => {
+          expect(body.msg).toBe('Not Found');
+        });
+    });
+  });
+
+  describe('PATCH /api/reviews/:review_id', () => {
+    test('200: should return updated review when passed a request body and review_id. Should increment vote when passed a positive number.', () => {
+      const requestBody = {
+        inc_votes: 1,
+      };
+      return request(app)
+        .patch('/api/reviews/1')
+        .send(requestBody)
+        .expect(200)
+        .then(({body}) => {
+          expect(body.review.title).toBe('Agricola');
+          expect(body.review.designer).toBe('Uwe Rosenberg');
+          expect(body.review.owner).toBe('mallionaire');
+          expect(body.review.review_img_url).toBe(
+            'https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700'
+          );
+          expect(body.review.review_body).toBe('Farmyard fun!');
+          expect(body.review.category).toBe('euro game');
+          expect(body.review.votes).toBe(2);
+          expect(body.review.review_id).toBe(1);
+          expect(body.review).toHaveProperty('created_at', expect.any(String));
+        });
+    });
+    test('200: should return updated review when passed a request body and review_id. Should decrement vote when passed a negative number.', () => {
+      const requestBody = {
+        inc_votes: -3,
+      };
+      return request(app)
+        .patch('/api/reviews/4')
+        .send(requestBody)
+        .expect(200)
+        .then(({body}) => {
+          expect(body.review.title).toBe('Dolor reprehenderit');
+          expect(body.review.designer).toBe('Gamey McGameface');
+          expect(body.review.owner).toBe('mallionaire');
+          expect(body.review.review_img_url).toBe(
+            'https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?w=700&h=700'
+          );
+          expect(body.review.review_body).toBe(
+            'Consequat velit occaecat voluptate do. Dolor pariatur fugiat sint et proident ex do consequat est. Nisi minim laboris mollit cupidatat et adipisicing laborum do. Sint sit tempor officia pariatur duis ullamco labore ipsum nisi voluptate nulla eu veniam. Et do ad id dolore id cillum non non culpa. Cillum mollit dolor dolore excepteur aliquip. Cillum aliquip quis aute enim anim ex laborum officia. Aliqua magna elit reprehenderit Lorem elit non laboris irure qui aliquip ad proident. Qui enim mollit Lorem labore eiusmod'
+          );
+          expect(body.review.category).toBe('social deduction');
+          expect(body.review.votes).toBe(4);
+          expect(body.review.review_id).toBe(4);
+          expect(body.review).toHaveProperty('created_at', expect.any(String));
+        });
+    });
+    test('400: should return an error when field is missing an entry', () => {
+      const requestBody = {};
+      return request(app)
+        .patch('/api/reviews/8')
+        .send(requestBody)
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
+        });
+    });
+    test('400: should return an error message when passed an invalid review_id', () => {
+      return request(app)
+        .patch('/api/reviews/notanid')
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
+        });
+    });
+    test('400: should return an error message when passed invalid entry data type', () => {
+      const requestBody = {
+        inc_votes: 'invalid entry data type',
+      };
+      return request(app)
+        .patch('/api/reviews/6')
+        .send(requestBody)
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
+        });
+    });
+    test('404: should return an error message when passed a valid but non existent review_id', () => {
+      const requestBody = {
+        inc_votes: 1,
+      };
+      return request(app)
+        .patch('/api/reviews/60')
+        .send(requestBody)
         .expect(404)
         .then(({body}) => {
           expect(body.msg).toBe('Not Found');

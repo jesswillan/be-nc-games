@@ -1,4 +1,4 @@
-const {res} = require('../app');
+const {res} = require('../../app');
 
 exports.handleInvalidPath = (req, res) => {
   console.log('404 Error');
@@ -10,11 +10,12 @@ exports.handlePSQLErrors = (err, req, res, next) => {
     res.status(400).send({msg: 'Bad Request'});
   }
   if (err.code === '23503') {
-    res.status(400).send({msg: 'Bad Request'});
+    res.status(404).send({msg: 'Not Found'});
   }
   if (err.code === '23502') {
-    res.status(400).send({msg: 'Bad Request'})
-  } next(err);
+    res.status(400).send({msg: 'Bad Request'});
+  }
+  next(err);
 };
 
 exports.handleCustomErrors = (err, req, res, next) => {
