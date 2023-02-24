@@ -174,7 +174,7 @@ describe('app', () => {
     });
     test('400: POST should return an error message when passed an invalid review_id', () => {
       return request(app)
-        .get('/api/reviews/notanid/comments')
+        .post('/api/reviews/notanid/comments')
         .expect(400)
         .then(({body}) => {
           expect(body.msg).toBe('Bad Request');
@@ -188,14 +188,19 @@ describe('app', () => {
       return request(app)
         .post('/api/reviews/6/comments')
         .send(requestBody)
-        .expect(400)
+        .expect(404)
         .then(({body}) => {
-          expect(body.msg).toBe('Bad Request');
+          expect(body.msg).toBe('Not Found');
         });
     });
     test('404: POST should return an error message when passed a valid but non existent review_id', () => {
+      const requestBody = {
+        username: 'tom',
+        body: 'Bad game',
+      };
       return request(app)
-        .get('/api/reviews/50/comments')
+        .post('/api/reviews/50/comments')
+        .send(requestBody)
         .expect(404)
         .then(({body}) => {
           expect(body.msg).toBe('Not Found');
@@ -203,7 +208,7 @@ describe('app', () => {
     });
   });
 
-  describe.only('PATCH /api/reviews/:review_id', () => {
+  describe('PATCH /api/reviews/:review_id', () => {
     test('200: should return updated review when passed a request body and review_id. Should increment vote when passed a positive number.', () => {
       const requestBody = {
         inc_votes: 1,
@@ -248,6 +253,44 @@ describe('app', () => {
           expect(body.review.votes).toBe(4);
           expect(body.review.review_id).toBe(4);
           expect(body.review).toHaveProperty('created_at', expect.any(String));
+        });
+    });
+    test('400: should return an error when field is missing an entry', () => {
+      const requestBody = {};
+      return request(app)
+        .patch('/api/reviews/8')
+        .send(requestBody)
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
+        });
+    });
+    test('400: should return an error message when passed an invalid review_id', () => {
+      return request(app)
+        .patch('/api/reviews/notanid')
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
+        });
+    });
+    test('400: should return an error message when passed invalid entry data type', () => {
+      const requestBody = {
+        inc_votes: 'invalid entry data type',
+      };
+      return request(app)
+        .patch('/api/reviews/6')
+        .send(requestBody)
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
+        });
+    });
+    test('404: should return an error message when passed a valid but non existent review_id', () => {
+      return request(app)
+        .patch('/api/reviews/60/comments')
+        .expect(404)
+        .then(({body}) => {
+          expect(body.msg).toBe('Not Found');
         });
     });
   });
