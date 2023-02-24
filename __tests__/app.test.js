@@ -286,8 +286,12 @@ describe('app', () => {
         });
     });
     test('404: should return an error message when passed a valid but non existent review_id', () => {
+      const requestBody = {
+        inc_votes: 1,
+      };
       return request(app)
-        .patch('/api/reviews/60/comments')
+        .patch('/api/reviews/60')
+        .send(requestBody)
         .expect(404)
         .then(({body}) => {
           expect(body.msg).toBe('Not Found');

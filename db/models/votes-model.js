@@ -10,6 +10,9 @@ exports.changeVote = (newVotes, review_id) => {
       [newVotes, review_id]
     )
     .then((res) => {
+      if (res.rows.length === 0) {
+        return Promise.reject({status: 404, msg: 'Not Found'})
+      }
       return res.rows[0];
     })
     .catch((err) => {
