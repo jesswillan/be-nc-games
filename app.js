@@ -1,18 +1,18 @@
 const express = require('express');
 const app = express();
-const {getCategories} = require('./controllers/categories-controller');
-const {getReviews, getReviewById} = require('./controllers/reviews-controller');
+const {getCategories} = require('./db/controllers/categories-controller');
+const {getReviews, getReviewById} = require('./db/controllers/reviews-controller');
 const {
   getCommentsByReviewId,
   postComment,
-} = require('./controllers/comments-controller');
-const {updateVote} = require('./controllers/votes-controller');
+} = require('./db/controllers/comments-controller');
+const {updateVote} = require('./db/controllers/votes-controller');
 const {
   handleInvalidPath,
   handlePSQLErrors,
   handleCustomErrors,
   handle500Statuses,
-} = require('./controllers/error-handling-controller');
+} = require('./db/controllers/error-handling-controller');
 
 app.use(express.json());
 

@@ -1,6 +1,6 @@
 const request = require('supertest');
 const seed = require('../db/seeds/seed');
-const app = require('../db/app');
+const app = require('../app');
 const connection = require('../db/connection');
 const data = require('../db/data/test-data/index');
 

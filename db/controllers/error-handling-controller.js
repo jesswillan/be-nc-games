@@ -1,4 +1,4 @@
-const {res} = require('../app');
+const {res} = require('../../app');
 
 exports.handleInvalidPath = (req, res) => {
   console.log('404 Error');
