@@ -1,12 +1,16 @@
 const express = require('express');
 const app = express();
 const {getCategories} = require('./db/controllers/categories-controller');
-const {getReviews, getReviewById} = require('./db/controllers/reviews-controller');
+const {
+  getReviews,
+  getReviewById,
+} = require('./db/controllers/reviews-controller');
 const {
   getCommentsByReviewId,
   postComment,
 } = require('./db/controllers/comments-controller');
 const {updateVote} = require('./db/controllers/votes-controller');
+const {getUsers} = require('./db/controllers/users-controller');
 const {
   handleInvalidPath,
   handlePSQLErrors,
@@ -27,6 +31,8 @@ app.get(`/api/reviews/:review_id/comments`, getCommentsByReviewId);
 app.post(`/api/reviews/:review_id/comments`, postComment);
 
 app.patch(`/api/reviews/:review_id`, updateVote);
+
+app.get(`/api/users`, getUsers);
 
 app.all('*', handleInvalidPath);
 
