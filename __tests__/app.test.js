@@ -37,7 +37,7 @@ describe('app', () => {
         });
     });
   });
-  describe('GET /api/reviews', () => {
+  describe.only('GET /api/reviews', () => {
     test('200: GET should return an array of review objects', () => {
       return request(app)
         .get(`/api/reviews`)
@@ -58,7 +58,76 @@ describe('app', () => {
           });
         });
     });
+    describe('GET /api/reviews?category=category (queries)', () => {
+      test('200: should respond with an array of review objects when queried with a valid category when only one game with that category has been reviewed', () => {
+        return request(app)
+          .get('/api/reviews?category=dexterity')
+          .expect(200)
+          .then(({body}) => {
+            expect(body.reviews).toHaveLength(1);
+            expect(Array.isArray(body.reviews)).toBe(true);
+            expect(body.reviews[0].owner).toBe('philippaclaire9');
+            expect(body.reviews[0].title).toBe('Jenga');
+            expect(body.reviews[0].review_id).toBe(2);
+            expect(body.reviews[0].category).toBe('dexterity');
+            expect(body.reviews[0].review_img_url).toBe(
+              'https://images.pexels.com/photos/4473494/pexels-photo-4473494.jpeg?w=700&h=700'
+            );
+            expect(body.reviews[0].votes).toBe(5);
+            expect(body.reviews[0].designer).toBe('Leslie Scott');
+            expect(body.reviews[0].comment_count).toBe(3);
+            expect(body.reviews[0]).toHaveProperty(
+              'created_at',
+              expect.any(String)
+            );
+          });
+      });
+      test('200: should respond with an array of review objects when queried with a valid category when multiple games of that category have been reviewed', () => {
+        return request(app)
+          .get('/api/reviews?category=social deduction')
+          .expect(200)
+          .then(({body}) => {
+            expect(body.reviews).toHaveLength(11);
+            expect(Array.isArray(body.reviews)).toBe(true);
+            body.reviews.forEach((review) => {
+              expect(review).toHaveProperty('owner', expect.any(String));
+              expect(review).toHaveProperty('title', expect.any(String));
+              expect(review).toHaveProperty('review_id', expect.any(Number));
+              expect(review).toHaveProperty('category', expect.any(String));
+              expect(review).toHaveProperty(
+                'review_img_url',
+                expect.any(String)
+              );
+              expect(review).toHaveProperty('created_at', expect.any(String));
+              expect(review).toHaveProperty('votes', expect.any(Number));
+              expect(review).toHaveProperty('designer', expect.any(String));
+              expect(review).toHaveProperty(
+                'comment_count',
+                expect.any(Number)
+              );
+            });
+          });
+      });
+
+      test('200: should respond with an empty array when category is valid but no games of the category have been reviewed', () => {
+        return request(app)
+          .get("/api/reviews?category=children's games")
+          .expect(200)
+          .then(({body}) => {
+            expect(body.reviews).toHaveLength(0);
+          });
+      });
+      test('404 should respond with an error when queried with a valid but non existent category', () => {
+        return request(app)
+          .get('/api/reviews?category=strategy')
+          .expect(404)
+          .then(({body}) => {
+            expect(body.msg).toBe('Not Found');
+          });
+      });
+    });
   });
+
   describe('GET /api/reviews/:review_id', () => {
     test('200: GET should return a review object when passed a review_id', () => {
       return request(app)

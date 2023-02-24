@@ -28,6 +28,8 @@ app.post(`/api/reviews/:review_id/comments`, postComment);
 
 app.patch(`/api/reviews/:review_id`, updateVote);
 
+app.get(`/api/`)
+
 app.all('*', handleInvalidPath);
 
 app.use(handlePSQLErrors);

@@ -1,8 +1,10 @@
 const {fetchReviews, fetchReviewById} = require('../models/reviews-model');
+const {fetchCategories} = require('../models/categories-model');
 
 exports.getReviews = (req, res, next) => {
-  const body = req.body;
-  fetchReviews(body)
+  const {category} = req.query;
+
+  fetchReviews(category)
     .then((reviews) => {
       res.status(200).send({reviews});
     })
