@@ -37,7 +37,7 @@ describe('app', () => {
         });
     });
   });
-  describe.only('GET /api/reviews', () => {
+  describe('GET /api/reviews', () => {
     test('200: GET should return an array of review objects', () => {
       return request(app)
         .get(`/api/reviews`)
