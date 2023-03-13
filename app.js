@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const {getCategories} = require('./db/controllers/categories-controller');
 const {
   getReviews,
@@ -19,6 +20,8 @@ const {
 } = require('./db/controllers/error-handling-controller');
 
 app.use(express.json());
+
+app.use(cors());
 
 app.get(`/api/categories`, getCategories);
 
