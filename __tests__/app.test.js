@@ -82,7 +82,7 @@ describe('app', () => {
             );
           });
       });
-      test('200: should respond with an array of review objects when queried with a valid category when multiple games of that category have been reviewed', () => {
+      test('200: GET should respond with an array of review objects when queried with a valid category when multiple games of that category have been reviewed', () => {
         return request(app)
           .get('/api/reviews?category=social deduction')
           .expect(200)
@@ -109,7 +109,7 @@ describe('app', () => {
           });
       });
 
-      test('200: should respond with an empty array when category is valid but no games of the category have been reviewed', () => {
+      test('200: GET should respond with an empty array when category is valid but no games of the category have been reviewed', () => {
         return request(app)
           .get("/api/reviews?category=children's games")
           .expect(200)
@@ -117,7 +117,7 @@ describe('app', () => {
             expect(body.reviews).toHaveLength(0);
           });
       });
-      test('404 should respond with an error when queried with a valid but non existent category', () => {
+      test('404: GET should respond with an error when queried with a valid but non existent category', () => {
         return request(app)
           .get('/api/reviews?category=strategy')
           .expect(404)
@@ -229,7 +229,7 @@ describe('app', () => {
           expect(body.comment).toHaveProperty('created_at', expect.any(String));
         });
     });
-    test('400: should return an error when field is missing an entry', () => {
+    test('400: POST should return an error when field is missing an entry', () => {
       const requestBody = {
         body: 'Bad game',
       };
@@ -249,7 +249,7 @@ describe('app', () => {
           expect(body.msg).toBe('Bad Request');
         });
     });
-    test('400: POST should return an error message when passed a non-existent username', () => {
+    test('404: POST should return an error message when passed a non-existent username', () => {
       const requestBody = {
         username: 'tom',
         body: 'Bad game',
@@ -300,7 +300,7 @@ describe('app', () => {
           expect(body.review).toHaveProperty('created_at', expect.any(String));
         });
     });
-    test('200: should return updated review when passed a request body and review_id. Should decrement vote when passed a negative number.', () => {
+    test('200: PATCH should return updated review when passed a request body and review_id. Should decrement vote when passed a negative number.', () => {
       const requestBody = {
         inc_votes: -3,
       };
@@ -324,7 +324,7 @@ describe('app', () => {
           expect(body.review).toHaveProperty('created_at', expect.any(String));
         });
     });
-    test('400: should return an error when field is missing an entry', () => {
+    test('400: PATCH should return an error when field is missing an entry', () => {
       const requestBody = {};
       return request(app)
         .patch('/api/reviews/8')
@@ -334,7 +334,7 @@ describe('app', () => {
           expect(body.msg).toBe('Bad Request');
         });
     });
-    test('400: should return an error message when passed an invalid review_id', () => {
+    test('400: PATCH should return an error message when passed an invalid review_id', () => {
       return request(app)
         .patch('/api/reviews/notanid')
         .expect(400)
@@ -342,7 +342,7 @@ describe('app', () => {
           expect(body.msg).toBe('Bad Request');
         });
     });
-    test('400: should return an error message when passed invalid entry data type', () => {
+    test('400: PATCH should return an error message when passed invalid entry data type', () => {
       const requestBody = {
         inc_votes: 'invalid entry data type',
       };
@@ -354,7 +354,7 @@ describe('app', () => {
           expect(body.msg).toBe('Bad Request');
         });
     });
-    test('404: should return an error message when passed a valid but non existent review_id', () => {
+    test('404: PATCH should return an error message when passed a valid but non existent review_id', () => {
       const requestBody = {
         inc_votes: 1,
       };
